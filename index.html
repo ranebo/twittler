@@ -5,20 +5,85 @@
     <script src="data_generator.js"></script>
   </head>
   <body>
+    <section>
+    </section>
     <script>
 
       $(document).ready(function(){
-        var $body = $('body');
-        $body.html('');
+        var $section = $('section'); 
+        $section.html('');
 
-        var index = streams.home.length - 1;
-        while(index >= 0){
-          var tweet = streams.home[index];
-          var $tweet = $('<div></div>');
-          $tweet.text('@' + tweet.user + ': ' + tweet.message);
-          $tweet.appendTo($body);
-          index -= 1;
+// BRAIN STORM NOTES
+//set up twitter devs that get added... should include:
+  // name attribute to find who sent it
+  // h3 for @ tweet.user:
+  // p for tweet.message
+  // date some how - tweet.created_at (see how to format for what I want)
+
+// set interval to refresh automatically
+
+//make button to view all when viewing individual user... this button also will refresh if currently on all
+
+// when click on user handle, filter just their tweets
+
+// htmls/css:
+  // header - generic banner on all/ user name on individual
+  //footer - ??
+  // aside: fixed position to side, lists all people you are following
+  //section: the container: puts the update stuff in here, use .html('')
+  // another section/aside on other side for symmetry-also fixed
+
+
+//Display Tweets
+
+//see how: Formatting date display /  how to show ie 2min ago
+
+        var currentUser = 'all';
+
+        var display = function() {
+          $section.html('');
+          var index = streams.home.length - 1;
+          while(index >= 0){
+            var tweet = streams.home[index];
+            var $tweet = $('<div name="' + tweet.user + '"></div>');
+            var $user = $('<h3></h3>');
+            var $message = $('<p></p>');
+            var $date = $('<date></date>')
+
+            $tweet.append($user.text('@' + tweet.user + ':'),
+                          $message.text(tweet.message),
+                          $date.text(tweet.created_at));
+
+            if (currentUser !== "all"){
+              $tweet.not('[name="' + currentUser + '"]').hide();//in css make a class and add class instead when the time comes
+            }
+
+            $tweet.appendTo($section);
+            index -= 1;
+          }
+        };
+
+        var refresh = function(){
+          display();
+          setInterval(display, 2000);
         }
+
+        refresh();
+
+//Click on a tweet to see all of that users' tweets
+
+        $('section').on('click', 'div', function(){
+          currentUser = $(this).attr('name');
+          refresh();
+        });
+
+//Make show all button and add class(for any other place want to put this function)
+
+        $('.show-all').on('click', function(){
+          currentUser = 'all';
+          refresh();
+        });
+
 
       });
 
