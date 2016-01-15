@@ -1,92 +1,118 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <link rel="stylesheet" type="text/css" href="main.css">
     <script src="jquery.js"></script>
     <script src="data_generator.js"></script>
   </head>
   <body>
-    <section>
+
+    <header>
+      <section class="container">
+        <h1>Twittler</h1>
+      </section>
+    </header>
+
+    <section class="main-body">
+
+      <nav class="col-1-4 left">
+        <div class="spacing">
+          <div class="followers">
+            <ul>
+              <li class="btn" name ="All Your Friends!"><h2>See All</h2></li>
+              <li class="btn" name="@mracus"><h3>@mracus</h3></li>
+              <li class="btn" name="@shawndrost"><h3>@shawndrost</h3></li>
+              <li class="btn" name="@sharksforcheap"><h3>@sharksforcheap</h3></li>
+              <li class="btn" name="@douglascalhoun"><h3>@douglascalhoun</h3></li>
+            </ul>
+          </div>
+        </div>
+      </nav><!--
+
+   --><section class="feed col-2-4">
+        <div class="spacing">
+          <section class="tweet-feed">
+            <div class="feed-head">
+              <div>
+                <h2>Looking at:</h2>
+                <h3 class="who">All Your Friends!</h3>
+              </div>
+            </div>
+              <div class="feed-body">
+                <section class="tweets">
+                  <script>
+
+                    $(document).ready(function(){
+                      var $feed = $('.tweets'); 
+                      $feed.html('');
+
+                  // Display Tweets
+                  // Look into how to display user friendly time display: ex. 2min ago
+
+                      var currentUser = 'All Your Friends!';
+
+                      var display = function() {
+                        $feed.html('');
+                        var index = streams.home.length - 1;
+
+                        while(index >= 0){
+                          var tweet = streams.home[index];
+                          var $tweet = $('<div class="tweet" name="@' + tweet.user + '"></div>');
+
+                          $tweet.append($('<h3></h3>').text('@' + tweet.user + ':'),
+                                        $('<p class="message"></p>').text(tweet.message),
+                                        $('<p class="date"></p>').text(tweet.created_at));
+
+                          if (currentUser !== "All Your Friends!"){
+                            $tweet.not('[name="' + currentUser + '"]').addClass('hidden');
+                          }
+
+                          $tweet.appendTo($feed);
+                          index -= 1;
+                        }
+                      };
+
+                      var refresh = function(){
+                        display();
+                        setInterval(display, 5000);
+                      }
+
+                      refresh();
+
+                  // Click on a tweet to see all of that user's tweets 
+                  // Click on user's button to see all their tweets or all button to see all tweets
+    
+                      var showUsersTweets = function(){
+                        currentUser = $(this).attr('name');
+                        refresh();
+                        $('.who').text(currentUser);
+                      };
+
+                      $feed.on('click', '.tweet', showUsersTweets);
+
+                      $('.followers').on('click', '.btn', showUsersTweets);
+
+                    });
+
+                  </script>
+                </section>
+              </div>
+            </section>
+          </div>
+        </section><!--
+
+   --><section class="col-1-4 right">
+        <div class="spacing">
+<!--HERE FOR ADDING TO LEFT SIDE BAR  (add your own tweet? / choose refresh rate? / etc.) -->      
+        </div>
+      </section>
+
     </section>
-    <script>
 
-      $(document).ready(function(){
-        var $section = $('section'); 
-        $section.html('');
-
-// BRAIN STORM NOTES
-//set up twitter devs that get added... should include:
-  // name attribute to find who sent it
-  // h3 for @ tweet.user:
-  // p for tweet.message
-  // date some how - tweet.created_at (see how to format for what I want)
-
-// set interval to refresh automatically
-
-//make button to view all when viewing individual user... this button also will refresh if currently on all
-
-// when click on user handle, filter just their tweets
-
-// htmls/css:
-  // header - generic banner on all/ user name on individual
-  //footer - ??
-  // aside: fixed position to side, lists all people you are following
-  //section: the container: puts the update stuff in here, use .html('')
-  // another section/aside on other side for symmetry-also fixed
-
-
-//Display Tweets
-
-//see how: Formatting date display /  how to show ie 2min ago
-
-        var currentUser = 'all';
-
-        var display = function() {
-          $section.html('');
-          var index = streams.home.length - 1;
-          while(index >= 0){
-            var tweet = streams.home[index];
-            var $tweet = $('<div name="' + tweet.user + '"></div>');
-            var $user = $('<h3></h3>');
-            var $message = $('<p></p>');
-            var $date = $('<date></date>')
-
-            $tweet.append($user.text('@' + tweet.user + ':'),
-                          $message.text(tweet.message),
-                          $date.text(tweet.created_at));
-
-            if (currentUser !== "all"){
-              $tweet.not('[name="' + currentUser + '"]').hide();//in css make a class and add class instead when the time comes
-            }
-
-            $tweet.appendTo($section);
-            index -= 1;
-          }
-        };
-
-        var refresh = function(){
-          display();
-          setInterval(display, 2000);
-        }
-
-        refresh();
-
-//Click on a tweet to see all of that users' tweets
-
-        $('section').on('click', 'div', function(){
-          currentUser = $(this).attr('name');
-          refresh();
-        });
-
-//Make show all button and add class(for any other place want to put this function)
-
-        $('.show-all').on('click', function(){
-          currentUser = 'all';
-          refresh();
-        });
-
-
-      });
-
-    </script>
+    <footer>
+      <section class="container">
+        <cite><h6>Created By: <br> Rane Gridley</h6></cite>
+      </section>
+    </footer>
   </body>
 </html>
